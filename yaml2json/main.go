@@ -15,13 +15,13 @@ type yamlValue struct {
 	underlying interface{}
 }
 
-func (self *yamlValue) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	err := unmarshal(&self.underlying)
+func (value *yamlValue) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	err := unmarshal(&value.underlying)
 	if err != nil {
 		return err
 	}
 
-	if _, found := self.underlying.(map[interface{}]interface{}); found {
+	if _, found := value.underlying.(map[interface{}]interface{}); found {
 		var bridge map[string]yamlValue
 		converted := make(map[string]interface{}, len(bridge))
 		err = unmarshal(&bridge)
@@ -33,21 +33,21 @@ func (self *yamlValue) UnmarshalYAML(unmarshal func(interface{}) error) error {
 			converted[k] = v.underlying
 		}
 
-		self.underlying = converted
+		value.underlying = converted
 	}
 
 	return nil
 }
 
-func (self yamlValue) MarshalJSON() ([]byte, error) {
-	return json.Marshal(self.underlying)
+func (value yamlValue) MarshalJSON() ([]byte, error) {
+	return json.Marshal(value.underlying)
 }
 
 func main() {
 	flag.Usage = func() {
 		progname := os.Args[0]
 		fmt.Printf("Usage of %s:\n", progname)
-		fmt.Printf("\t%s [input [output]]", progname)
+		fmt.Printf("\t%s [input [output]]\n", progname)
 		flag.PrintDefaults()
 	}
 

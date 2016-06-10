@@ -15,7 +15,7 @@ func main() {
 	flag.Usage = func() {
 		progname := os.Args[0]
 		fmt.Printf("Usage of %s:\n", progname)
-		fmt.Printf("\t%s [input [output]]", progname)
+		fmt.Printf("\t%s [input [output]]\n", progname)
 		flag.PrintDefaults()
 	}
 
