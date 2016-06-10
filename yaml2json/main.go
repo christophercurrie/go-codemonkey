@@ -21,19 +21,21 @@ func (value *yamlValue) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		return err
 	}
 
-	if _, found := value.underlying.(map[interface{}]interface{}); found {
+	switch value.underlying.(type) {
+	case map[interface{}]interface{}:
 		var bridge map[string]yamlValue
-		converted := make(map[string]interface{}, len(bridge))
 		err = unmarshal(&bridge)
 		if err != nil {
 			return err
 		}
-
-		for k, v := range bridge {
-			converted[k] = v.underlying
+		value.underlying = bridge
+	case []interface{}:
+		var bridge []yamlValue
+		err = unmarshal(&bridge)
+		if err != nil {
+			return err
 		}
-
-		value.underlying = converted
+		value.underlying = bridge
 	}
 
 	return nil
@@ -90,7 +92,7 @@ func main() {
 		log.Fatalf("Unable to format output: %v\n", err)
 	}
 
-	_, err = output.Write(data)
+	_, err = output.WriteString(string(data) + "\n")
 	if err != nil {
 		log.Fatalf("Unable to write output: %v\n", err)
 	}
