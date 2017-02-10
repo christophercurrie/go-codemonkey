@@ -35,7 +35,7 @@ func main() {
 
 	if flag.NArg() > 1 {
 		outputFile := flag.Arg(1)
-		output, err = os.OpenFile(outputFile, os.O_CREATE | os.O_WRONLY, 0)
+		output, err = os.OpenFile(outputFile, os.O_CREATE | os.O_WRONLY, 0644)
 		if err != nil {
 			log.Fatalf("Unable to open file %v: %v\n", outputFile, err)
 		}
